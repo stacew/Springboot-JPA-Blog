@@ -1,6 +1,39 @@
+server:
+  port: 8000
+  servlet:
+    context-path: /blog
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+    
 spring:
+  mvc:
+    view: 
+      prefix: /WEB-INF/views/ # 앞에 붙는 경로 : src하위 폴더에 webapp/WEB-INF/views를 만들어줘야한다.
+      suffix: .jsp # 뒤에 붙는 경로
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/blog?serverTimezone=Asia/Seoul
     username: owen
     password: 880426
+    
+  jpa:
+    open-in-view: true # lazy loading이 가능함. Controller에서 proxy 객체에 접근할 때, 새로 JDBC 연결 후 새로 Data를 가져옴. But, 해당 지역에서 변경 하면 안 됨. 더티 체킹 처리 불가능.
+    # false로 하면 lazy loading이 불가능하다는데 영속성 컨텍스트에 proxy처리를 안 하고 다 가져온다는건지,  controller에서 해당 proxy 접근이 불가능한 건지 테스트가 필요.
+    # 아마 추측은 이전 버전인 것 같음. JDBC와 트랜잭션을 유저단 까지 올려서 성능이 느린 부분일 듯.
+    hibernate:
+      ddl-auto: update # create, update, none : 최초에 create, 나중에는 update로 변경해야 됨.
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl 
+        # hibernateNaming, PhysicalNaming 전략. entity(table)를 만들 때, 변수명 그대로 DB의 필드로 만들어준다.
+        # SpringPhysicalNamingStrategyStandardImpl을 쓰면 myEmail => my_email : camel 표기법이 snaker 표기로 된다.
+      use-new-id-generator-mappings: false # true로 하면 JPA의 기본 넘버링 전략. false는 사용하는 DB의 넘버링 전략을 쓴다.
+    show-sql: true # console에 log가 나온다.
+    properties:
+      hibernate.format_sql: true # console log가 한 줄에서 정렬해서 나온다.
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
