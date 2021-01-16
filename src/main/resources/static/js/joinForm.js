@@ -36,9 +36,7 @@ let index = {
 		}).fail(function(error) { //전송 실패 시,
 			alert(JSON.stringify(error));
 		});
-	},
-
-
+	}
 
 }
 

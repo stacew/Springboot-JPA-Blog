@@ -27,13 +27,13 @@ public class HttpControllerTest {
 	}
 	
 	//인터넷 브라우저 주소창으로는 무조건 get요청 밖에 할 수 없다.
-	//http://localhost:8000/blog/http/get(select)
+	//http://localhost:8000/http/get(select)
 	@GetMapping("/http/get")
 	public String getTest(Member m) { //MessageConverter(스프링부트)
 		return "get 요청 : " + m.getId() + ", " + m.getUsername() +", " + m.getPassword() + ", " +m.getEmail();
 	}
 	
-	//http://localhost:8000/blog/http/post(insert)
+	//http://localhost:8000/http/post(insert)
 //	@PostMapping("/http/post")
 //	public String postTest(@RequestBody String text) { //text
 //		return "post 요청 : " + text;
@@ -43,12 +43,12 @@ public class HttpControllerTest {
 		return "post 요청 : " + m.getId() + ", " + m.getUsername() +", " + m.getPassword() + ", " +m.getEmail();
 	}
 	
-	//http://localhost:8000/blog/http/put(update)
+	//http://localhost:8000/http/put(update)
 	@PutMapping("/http/put")
 	public String putTest(@RequestBody Member m) {
 		return "put 요청 : " + m.getId() + ", " + m.getUsername() +", " + m.getPassword() + ", " +m.getEmail();
 	}
-	//http://localhost:8000/blog/http/delete(delete)
+	//http://localhost:8000/http/delete(delete)
 	@DeleteMapping("/http/delete")
 	public String deleteTest() {
 		return "delete 요청";

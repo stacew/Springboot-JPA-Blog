@@ -34,7 +34,7 @@ public class DummyContollerTest {
 	//id를 전달하면 해당 id에 대한 데이터가 없으면 insert
 
 	
-	// http://localhost:8000/blog/dummy/user/1
+	// http://localhost:8000/dummy/user/1
 	@DeleteMapping("/dummy/user/{id}")
 	public String deleteUser(@PathVariable int id) {
 		try {
@@ -48,7 +48,7 @@ public class DummyContollerTest {
 	}
 	
 	
-	// http://localhost:8000/blog/dummy/user/1
+	// http://localhost:8000/dummy/user/1
 	@Transactional //함수 종료 시에 자동 commit
 	@PutMapping("/dummy/user/{id}") //email, password
 	//@RequestBody json 데이터 요청 => Java Object 변환 ( MessageConverter의 Jackson 라이브러리가 변환해 줌 )
@@ -68,15 +68,15 @@ public class DummyContollerTest {
 		return user;	
 	}//더티 체킹 : 수정 사항이 없으면 @Transactional로 발생하는 commit 작업하지 않는다.
 	
-	// http://localhost:8000/blog/dummy/users
+	// http://localhost:8000/dummy/users
 	@GetMapping("dummy/users")
 	public List<User> list() {
 		return userRepository.findAll();
 	}
 
 	// 한 페이지 당 n건의 데이터를 리턴 받기
-	// http://localhost:8000/blog/dummy/user
-	// http://localhost:8000/blog/dummy/user?page=0
+	// http://localhost:8000/dummy/user
+	// http://localhost:8000/dummy/user?page=0
 	@GetMapping("dummy/user")
 	public List<User> pageList(@PageableDefault(size = 2, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 		Page<User> pagingUser = userRepository.findAll(pageable);
@@ -95,7 +95,7 @@ public class DummyContollerTest {
 	 */
 
 	// {id} 주소로 파라미터를 전달 받을 수 잇음.
-	// http://localhost:8000/blog/dummy/user/3
+	// http://localhost:8000/dummy/user/3
 	@GetMapping("dummy/user/{id}")
 	public User detail(@PathVariable int id) {
 		// userRepository.findById(id); // return optional
@@ -131,7 +131,7 @@ public class DummyContollerTest {
 		return user;
 	}
 
-	// http://localhost:8000/blog/dummy/join
+	// http://localhost:8000/dummy/join
 	// body : username, password, email 데이터를 가지고 request
 	@PostMapping("dummy/join")
 	// public String join(String username, String password, String email) { // Key -

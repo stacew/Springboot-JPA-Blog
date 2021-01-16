@@ -3,7 +3,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <!-- https://docs.spring.io/spring-security/site/docs/3.0.x/reference/el-access.html -->
 <sec:authorize access="isAuthenticated()">
-	<sec:authentication property="principal" var="principal"/>
+	<sec:authentication property="principal" var="principal" />
 </sec:authorize>
 
 <!DOCTYPE html>
@@ -12,8 +12,12 @@
 <title>DoksamTech</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 
@@ -33,9 +37,10 @@
 				</c:when>
 				<c:otherwise>
 					<ul class="navbar-nav">
-						<li class="nav-item"><a class="nav-link" href="/board/form">글쓰기</a></li>
-						<li class="nav-item"><a class="nav-link" href="/user/form">회원정보</a></li>
-						<li class="nav-item"><a class="nav-link" href="/logout">로그아웃</a></li> <!-- /logout : 디폴트 주소 -->
+						<li class="nav-item"><a class="nav-link" href="/board/writeForm">글쓰기</a></li>
+						<li class="nav-item"><a class="nav-link" href="/user/infoForm">회원정보</a></li>
+						<li class="nav-item"><a class="nav-link" href="/logout">로그아웃</a></li>
+						<!-- /logout : 디폴트 주소 -->
 					</ul>
 				</c:otherwise>
 			</c:choose>
