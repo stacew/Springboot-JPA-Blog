@@ -2,11 +2,11 @@ let index = {
 
 	init: function() {
 		$("#btn-saveWrite").on("click", () => { 
-			this.join();
+			this.saveWrite();
 		});
 	},
 
-	join: function() {
+	saveWrite: function() {
 		let data = {
 			title: $("#title").val(),
 			content: $("#content").val(),
