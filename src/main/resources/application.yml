@@ -30,7 +30,7 @@ spring:
         # hibernateNaming, PhysicalNaming 전략. entity(table)를 만들 때, 변수명 그대로 DB의 필드로 만들어준다.
         # SpringPhysicalNamingStrategyStandardImpl을 쓰면 myEmail => my_email : camel 표기법이 snaker 표기로 된다.
       use-new-id-generator-mappings: false # true로 하면 JPA의 기본 넘버링 전략. false는 사용하는 DB의 넘버링 전략을 쓴다.
-    show-sql: true # console에 log가 나온다.
+#    show-sql: true # console에 log가 나온다.
     properties:
       hibernate.format_sql: true # console log가 한 줄에서 정렬해서 나온다.
 

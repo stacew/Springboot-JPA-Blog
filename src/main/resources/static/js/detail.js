@@ -7,7 +7,7 @@ let index = {
 
 	//보낸 사람의 권한이나 id 체크도 필요..
 	deleteById: function() {
-		var id = $("#board_id").text();
+		let id = $("#board_id").text();
 
 		$.ajax({
 			type: "DELETE",
