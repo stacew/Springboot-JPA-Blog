@@ -11,12 +11,13 @@ import com.doksam.blog.dto.ResponseDto;
 @RestController
 public class GlobalExceptionHandler {
 
-	@ExceptionHandler(value=IllegalArgumentException.class)
-	public ResponseDto<String> handleArgumentException(IllegalArgumentException e) {
-		return new ResponseDto<String>(HttpStatus.BAD_REQUEST, e.getMessage());
+	@ExceptionHandler(value = IllegalArgumentException.class)
+	public ResponseDto handleArgumentException(IllegalArgumentException e) {
+		return new ResponseDto(HttpStatus.BAD_REQUEST, "GlobalExceptionHandler : " + e.getMessage());
 	}
-	@ExceptionHandler(value=Exception.class)
-	public ResponseDto<String> handleException(Exception e) {
-		return new ResponseDto<String>(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-	}	
+
+	@ExceptionHandler(value = Exception.class)
+	public ResponseDto handleException(Exception e) {
+		return new ResponseDto(HttpStatus.INTERNAL_SERVER_ERROR, "GlobalExceptionHandler : " + e.getMessage());
+	}
 }

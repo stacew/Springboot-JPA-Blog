@@ -10,37 +10,35 @@ import org.springframework.web.bind.annotation.RestController;
 import com.doksam.blog.dto.ResponseDto;
 import com.doksam.blog.model.RoleType;
 import com.doksam.blog.model.User;
+import com.doksam.blog.service.ServiceResType;
 import com.doksam.blog.service.UserService;
 
 @RestController
-public class UserApiController {
-	
+public class AuthApiController {
+
 	@Autowired
 	private UserService userService;
-	
-	@Autowired
-	private BCryptPasswordEncoder encoder;
-	
-	@PostMapping("/auth/joinProc")
-	public ResponseDto<Integer> joinProc(@RequestBody User user){
-		System.out.println("UserApiController : joinProc() 호출 됨.");
-		
-		//@Column(nullable=false) 만으로는 DB에 emptyString 방지가 불가능 하기 때문에 추가
-		if( user.getUsername().isBlank() || user.getUsername().isEmpty()
-				|| user.getEmail().isBlank() || user.getEmail().isEmpty()
-				|| user.getPassword().isBlank() || user.getPassword().isEmpty() )
-			return new ResponseDto<Integer>(HttpStatus.BAD_REQUEST, -1);
-				
-		String rawPassword = user.getPassword(); //ui처리는 https로
-		String encPassword = encoder.encode(rawPassword);
-		user.setPassword(encPassword);
-		user.setRole(RoleType.USER);	
-		
-		int result = userService.회원가입(user);		
-		return new ResponseDto<Integer>(HttpStatus.OK, result); //자바 오브젝트를 JSON으로 변환해서 리턴(Jackson)
+
+	@PostMapping("/auth/create")
+	public ResponseDto create(@RequestBody User user) {
+		// @Column(nullable=false) 만으로는 DB에 emptyString 방지가 불가능 하기 때문에 추가
+		if (user.getUsername().isBlank() || user.getUsername().isEmpty())
+			return new ResponseDto(HttpStatus.BAD_REQUEST, "username is empty.");
+		else if (user.getEmail().isBlank() || user.getEmail().isEmpty())
+			return new ResponseDto(HttpStatus.BAD_REQUEST, "email is empty.");
+		else if (user.getPassword().isBlank() || user.getPassword().isEmpty())
+			return new ResponseDto(HttpStatus.BAD_REQUEST, "password is empty.");
+
+		//service
+		ServiceResType res = userService.회원가입(user);
+		if (res == ServiceResType.Duplicated_Username)
+			return new ResponseDto(HttpStatus.BAD_REQUEST, "해당 username이 존재합니다.");
+		else if (res == ServiceResType.Duplicated_Email)
+			return new ResponseDto(HttpStatus.BAD_REQUEST, "해당 email이 존재합니다.");
+
+		return new ResponseDto(HttpStatus.OK, ""); // 자바 오브젝트를 JSON으로 변환해서 리턴(Jackson)
 	}
 }
-
 
 ////legacy 로그인 방식.
 //@Autowired

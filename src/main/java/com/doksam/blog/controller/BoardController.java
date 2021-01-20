@@ -1,14 +1,19 @@
 package com.doksam.blog.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.doksam.blog.config.auth.PrincipalDetail;
+import com.doksam.blog.model.Board;
 import com.doksam.blog.service.BoardService;
 
 @Controller
@@ -20,7 +25,7 @@ public class BoardController {
 	// http://localhost:8000
 	@GetMapping({ "", "/" }) //
 	public String index(Model model, @PageableDefault(size=3,sort="id",direction=Sort.Direction.DESC) Pageable pageable) {
-		model.addAttribute("boards", boardService.글목록(pageable));		
+		model.addAttribute("boardPage", boardService.페이지(pageable));		
 			
 		return "index";
 		//@Controller는 리턴할 때 viewResolver가 작동!
@@ -28,21 +33,34 @@ public class BoardController {
 	}
 	
 	@GetMapping("/board/{id}")
-	public String findBoardById(Model model, @PathVariable int id){
-		model.addAttribute("board", boardService.글상세보기(id));
+	public String findBoardById(@PathVariable int id, Model model){
+		Optional<Board> board = boardService.가져오기(id);
+		if( board.isEmpty() )
+			return "exception/deleted";
+		
+		model.addAttribute("board", board.get());
 		return "board/detail";
 	}
 
-	@GetMapping("/board/{id}/updateForm")
-	public String updateForm(@PathVariable int id, Model model) {
-		model.addAttribute("board", boardService.글상세보기(id));
+	@GetMapping("/board/updateForm/{id}")
+	public String updateForm(@AuthenticationPrincipal PrincipalDetail principal,
+			@PathVariable int id, Model model) {
+		
+		Optional<Board> board = boardService.가져오기(id);
+		if( board.isEmpty() )
+			return "exception/deleted";
+		
+		if( principal.getUser().getId() != board.get().getUser().getId() )
+			return "exception/principal";
+		
+		model.addAttribute("board", board.get());
 		return "board/updateForm";
 	}
 	
 	//USER 권한 필요
-	@GetMapping("/board/writeForm")
-	public String writeForm() {
-		return "board/writeForm";
+	@GetMapping("/board/createForm")
+	public String createForm() {
+		return "board/createForm";
 	}
 	
 }

@@ -13,6 +13,7 @@ public interface UserRepository extends JpaRepository<User, Integer> { // User �
 
 	// SELECT * FROM user WHERE username = 1?;
 	Optional<User> findByUsername(String username);
+	Optional<User> findByEmail(String email);
 }
 
 ////1.  JPA Naming 전략 : 함수 이름에 따라 쿼리가 만들어짐.

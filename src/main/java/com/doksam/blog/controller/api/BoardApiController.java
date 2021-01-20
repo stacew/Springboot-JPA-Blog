@@ -14,36 +14,50 @@ import com.doksam.blog.config.auth.PrincipalDetail;
 import com.doksam.blog.dto.ResponseDto;
 import com.doksam.blog.model.Board;
 import com.doksam.blog.service.BoardService;
+import com.doksam.blog.service.ServiceResType;
 
 @RestController
 public class BoardApiController {
 
 	@Autowired
 	private BoardService boardService;
-	
-	@PostMapping("/api/saveWriteBoard")
-	public ResponseDto<Integer> saveWriteBoard(@RequestBody Board board, @AuthenticationPrincipal PrincipalDetail principal){
-		System.out.println("UserApiController : joinProc() 호출 됨.");
-		
-		if( board.getTitle().isBlank() || board.getTitle().isEmpty() ) 
-			return new ResponseDto<Integer>(HttpStatus.BAD_REQUEST, -1);
-						
-		board.setCount(0);
-		board.setUser(principal.getUser());
-		boardService.글쓰기(board);
-		return new ResponseDto<Integer>(HttpStatus.OK, 1);
+
+	@PostMapping("/api/board/create")
+	public ResponseDto create(@AuthenticationPrincipal PrincipalDetail principal, @RequestBody Board board) {
+
+		if (board.getTitle().isBlank() || board.getTitle().isEmpty())
+			return new ResponseDto(HttpStatus.BAD_REQUEST, "title is empty.");
+
+		//service
+		boardService.생성(principal, board);
+		return new ResponseDto(HttpStatus.OK, "");
 	}
-	
+
 	@DeleteMapping("/api/board/{id}")
-	public ResponseDto<Integer> deleteById(@PathVariable int id){
-		boardService.글삭제하기(id);
-		return new ResponseDto<Integer>(HttpStatus.OK, 1); 
+	public ResponseDto deleteById(@AuthenticationPrincipal PrincipalDetail principal, @PathVariable int id) {
+
+		//service
+		ServiceResType res = boardService.삭제(principal, id);
+		if (res == ServiceResType.NotFound)
+			return new ResponseDto(HttpStatus.NOT_FOUND, "not found id");
+		else if (res == ServiceResType.Principal)
+			return new ResponseDto(HttpStatus.UNAUTHORIZED, "principal");
+
+		return new ResponseDto(HttpStatus.OK, "");
 	}
-	
+
 	@PutMapping("/api/board/{id}")
-	public ResponseDto<Integer> update(@PathVariable int id, @RequestBody Board board){
-		boardService.글수정하기(id, board);
-		return new ResponseDto<Integer>(HttpStatus.OK, 1);
+	public ResponseDto update(@AuthenticationPrincipal PrincipalDetail principal, @PathVariable int id,
+			@RequestBody Board board) {
+
+		//service
+		ServiceResType res = boardService.수정(principal, id, board);
+		if (res == ServiceResType.NotFound)
+			return new ResponseDto(HttpStatus.NOT_FOUND, "not found id");
+		else if (res == ServiceResType.Principal)
+			return new ResponseDto(HttpStatus.UNAUTHORIZED, "principal");
+
+		return new ResponseDto(HttpStatus.OK, "");
 	}
-	
+
 }

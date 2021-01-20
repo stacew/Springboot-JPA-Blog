@@ -34,11 +34,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable() // csrf 토큰 비 활성화 ( 개발 중 )
-				.authorizeRequests().antMatchers("/", "/auth/**", "/js/**", "/css/**", "/image/**").permitAll()
-				// 위 주소는 모두 허용
+				.authorizeRequests()
+				.antMatchers("/", "/auth/**", "/js/**", "/css/**", "/image/**").permitAll()//해당 주소는 모두 허용
+				//.antMatchers("/user").hasRole("USER")
+				//.antMatchers("/manager").hasRole("MANAGER")
+				//.antMatchers("/admin").hasRole("ADMIN")
 				.anyRequest().authenticated() // 다른 요청은 인증이 필요할 때,
-				.and().formLogin().loginPage("/auth/loginForm") // redirect...
-				.loginProcessingUrl("/auth/loginProc") // 스프링 시큐리티가 해당 주소로 오는 요청을 가로채서 대신해준다.
-				.defaultSuccessUrl("/").failureUrl("/auth/loginForm");
+			.and()
+				.formLogin()
+				.loginPage("/auth/loginForm") // redirect...
+				.loginProcessingUrl("/auth/login") // 스프링 시큐리티가 해당 주소로 오는 요청을 가로채서 대신해준다.
+				.defaultSuccessUrl("/")
+				//.successHandler(___________)
+				//.failureHandler(________)	//로그인 실패 시 팝업 처리
+				.failureUrl("/auth/loginForm");
 	}
 }

@@ -2,11 +2,14 @@ package com.doksam.blog.service;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.doksam.blog.config.auth.PrincipalDetail;
 import com.doksam.blog.model.Board;
 import com.doksam.blog.repository.BoardRepository;
 
@@ -17,40 +20,56 @@ public class BoardService {
 	private BoardRepository boardRepository;
 
 	@Transactional
-	public int 글쓰기(Board board) { // title, content
+	public ServiceResType 생성(PrincipalDetail principal, Board board) { // title, content
+		
+		board.setCount(0);
+		board.setUser(principal.getUser());
+		
 		boardRepository.save(board);
-		return 1;
+		return ServiceResType.Success;
 	}
 
 	@Transactional(readOnly = true)
-	public Page<Board> 글목록(Pageable pageable) {
+	public Page<Board> 페이지(Pageable pageable) {
 		return boardRepository.findAll(pageable);
 	}
 	
 	@Transactional(readOnly = true)
-	public Board 글상세보기(int id) {
-		return boardRepository.findById(id).orElseThrow(() -> {
-			return new IllegalArgumentException("게시글 아이디를 찾을 수 없습니다.");
-		});
+	public Optional<Board> 가져오기(int id) {
+		return boardRepository.findById(id);
 	}
 
 	@Transactional
-	public void 글삭제하기(int id) {
+	public ServiceResType 삭제(PrincipalDetail principal, int id) {
+		Optional<Board> opBoard = boardRepository.findById(id);
+		if( opBoard.isEmpty() )
+			return ServiceResType.NotFound;
+		
+		Board board = opBoard.get();		
+		if( principal.getUser().getId() != board.getUser().getId() )
+			return ServiceResType.Principal;
+		
 		boardRepository.deleteById(id);
+		return ServiceResType.Success;
 	}
 	
 	@Transactional
-	public void 글수정하기(int id, Board requestBoard) {
+	public ServiceResType 수정(PrincipalDetail principal, int id, Board reqBoard) {
 		//영속화 완료.
-		Board board = boardRepository.findById(id).orElseThrow(()->{
-			return new IllegalArgumentException("게시글 아이디를 찾을 수 없습니다.");
-		});
+		Optional<Board> opBoard = boardRepository.findById(id);
+		if( opBoard.isEmpty() )
+			return ServiceResType.NotFound;
 		
-		board.setTitle(requestBoard.getTitle());
-		board.setContent(requestBoard.getContent());
+		Board board = opBoard.get();		
+		if( principal.getUser().getId() != board.getUser().getId() )
+			return ServiceResType.Principal;
+				
+		board.setTitle(reqBoard.getTitle());
+		board.setContent(reqBoard.getContent());
 		
+		return ServiceResType.Success;
 		//해당 함수 종료 시, @Transctional 종료. 더티 체킹 - 자동 업데이트
-		//그래도 update 해주는게 낫지 않나...?
+		//그래도 update 해주는게 낫지 않나...?		
 	}
 	
 

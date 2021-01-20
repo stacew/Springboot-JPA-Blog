@@ -7,7 +7,7 @@
 		<button class="btn btn-secondary" onclick="history.back()">돌아가기</button>
 		<%-- id 외에 권한.. 필요 --%>
 		<c:if test="${board.user.id==principal.user.id}">
-			<a href="/board/${board.id}/updateForm" class="btn btn-warning">수정</a>
+			<a href="/board/updateForm/${board.id}" class="btn btn-warning">수정</a>
 			<button id="btn-delete" class="btn btn-danger">삭제</button>
 		</c:if>
 	</div>
@@ -27,5 +27,5 @@
 	</div>
 </div>
 
-<script src="/js/detail.js"></script>
+<script src="/js/board/detail.js"></script>
 <%@ include file="/WEB-INF/views/layout/footer.jsp"%>

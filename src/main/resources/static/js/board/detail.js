@@ -1,25 +1,24 @@
 let index = {
 	init: function() {
 		$("#btn-delete").on("click", () => {
-			this.deleteById();
+			this.delete();
 		});
 	},
 
-	//보낸 사람의 권한이나 id 체크도 필요..
-	deleteById: function() {
+	delete: function() {
 		let id = $("#board_id").text();
 
 		$.ajax({
 			type: "DELETE",
-			url: "/api/board/"+id,
+			url: "/api/board/" + id,
 			dataType: "json"
 		}).done(function(resp) {
-			if (resp.data == 1) {
+			if (resp.status == "OK") {
 				alert("삭제가 완료되었습니다.");
 				location.href = "/";
+			} else {
+				alert(resp.msg);
 			}
-			else
-				alert("삭제 실패");
 		}).fail(function(error) {
 			alert(JSON.stringify(error));
 		});

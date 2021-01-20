@@ -3,7 +3,8 @@
 
 <div class="container">
 
-	<form action="/auth/loginProc" method="post">
+	<%-- "/auth/login" WebSecurityConfigurerAdapter에서 정해줌. --%>
+	<form action="/auth/login" method="post">
 
 		<div class="form-group">
 			<label for="username">User Name</label> <input type="text" name="username" class="form-control" placeholder="Enter User Name" id="username">
@@ -14,10 +15,9 @@
 		</div>
 
 		<div class="form-group">
-			<button id="btn-login" class="btn btn-primary">로그인</button>
+			<button class="btn btn-primary">로그인</button>
 		</div>
 	</form>
-
 
 </div>
 

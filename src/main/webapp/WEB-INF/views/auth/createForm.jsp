@@ -16,11 +16,10 @@
 	</div>
 
 	<div class="form-group">
-		<button id="btn-join" class="btn btn-primary">회원 가입</button>
+		<button id="btn-create" class="btn btn-primary">회원 가입</button>
 	</div>
 
 </div>
-<script src="/js/joinForm.js"></script>
 
-
+<script src="/js/auth/createForm.js"></script>
 <%@ include file="/WEB-INF/views/layout/footer.jsp"%>
