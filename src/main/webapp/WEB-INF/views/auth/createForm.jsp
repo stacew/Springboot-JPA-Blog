@@ -4,15 +4,15 @@
 <div class="container">
 
 	<div class="form-group">
-		<label for="username">User Name</label> <input type="text" class="form-control" placeholder="Enter User Name" id="username">
+		<label for="username">User Name</label> <input type="text" class="form-control" placeholder="Enter User Name" id="username" autocomplete="off">
 	</div>
 
 	<div class="form-group">
-		<label for="password">Password</label> <input type="password" class="form-control" placeholder="Enter Password" id="password">
+		<label for="password">Password</label> <input type="password" class="form-control" placeholder="Enter Password" id="password" autocomplete="off">
 	</div>
 
 	<div class="form-group">
-		<label for="email">Email</label> <input type="email" class="form-control" placeholder="Enter Email" id="email">
+		<label for="email">Email</label> <input type="email" class="form-control" placeholder="Enter Email" id="email" autocomplete="off">
 	</div>
 
 	<div class="form-group">

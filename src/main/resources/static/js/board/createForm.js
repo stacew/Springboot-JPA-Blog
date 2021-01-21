@@ -8,7 +8,7 @@ let index = {
 	create: function() {
 		let data = {
 			title: $("#title").val(),
-			content: $("#content").val(),
+			content: $("#summerNoteContent").val(),
 		};
 		$.ajax({
 			type: "POST",

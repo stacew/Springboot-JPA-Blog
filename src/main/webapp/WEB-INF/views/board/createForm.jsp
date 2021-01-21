@@ -6,11 +6,11 @@
 <div class="container">
 
 	<div class="form-group">
-		<input type="text" class="form-control" placeholder="Enter Title" id="title">
+		<input type="text" class="form-control" placeholder="Enter Title" id="title" autocomplete="off">
 	</div>
 
 	<div class="form-group">
-		<textarea class="form-control summernote" rows="5" id="content"></textarea>
+		<textarea class="form-control" rows="5" id="summerNoteContent"></textarea>
 	</div>
 
 	<div class="form-group">
@@ -20,7 +20,7 @@
 </div>
 
 <script>
-      $('.summernote').summernote({
+      $('#summerNoteContent').summernote({
         tabsize: 2,
         height: 300
       });

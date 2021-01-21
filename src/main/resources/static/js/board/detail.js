@@ -10,7 +10,7 @@ let index = {
 
 		$.ajax({
 			type: "DELETE",
-			url: "/api/board/" + id,
+			url: "/api/board/delete" + id,
 			dataType: "json"
 		}).done(function(resp) {
 			if (resp.status == "OK") {

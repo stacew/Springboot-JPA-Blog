@@ -47,7 +47,7 @@ public class BoardService {
 		
 		Board board = opBoard.get();		
 		if( principal.getUser().getId() != board.getUser().getId() )
-			return ServiceResType.Principal;
+			return ServiceResType.PrincipalCheckFail;
 		
 		boardRepository.deleteById(id);
 		return ServiceResType.Success;
@@ -62,7 +62,7 @@ public class BoardService {
 		
 		Board board = opBoard.get();		
 		if( principal.getUser().getId() != board.getUser().getId() )
-			return ServiceResType.Principal;
+			return ServiceResType.PrincipalCheckFail;
 				
 		board.setTitle(reqBoard.getTitle());
 		board.setContent(reqBoard.getContent());

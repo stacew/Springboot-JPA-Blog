@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class UserController {
-	@GetMapping("/user/infoForm")
-	public String createFrom() {		
-		return "user/infoForm";		
+	@GetMapping("/user/updateForm")
+	public String updateForm() {		
+		return "user/updateForm";		
 	}
 }

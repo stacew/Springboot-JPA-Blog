@@ -33,20 +33,20 @@ public class BoardApiController {
 		return new ResponseDto(HttpStatus.OK, "");
 	}
 
-	@DeleteMapping("/api/board/{id}")
+	@DeleteMapping("/api/board/delete/{id}")
 	public ResponseDto deleteById(@AuthenticationPrincipal PrincipalDetail principal, @PathVariable int id) {
 
 		//service
 		ServiceResType res = boardService.삭제(principal, id);
 		if (res == ServiceResType.NotFound)
 			return new ResponseDto(HttpStatus.NOT_FOUND, "not found id");
-		else if (res == ServiceResType.Principal)
-			return new ResponseDto(HttpStatus.UNAUTHORIZED, "principal");
+		else if (res == ServiceResType.PrincipalCheckFail)
+			return new ResponseDto(HttpStatus.UNAUTHORIZED, "no Permission");
 
 		return new ResponseDto(HttpStatus.OK, "");
 	}
 
-	@PutMapping("/api/board/{id}")
+	@PutMapping("/api/board/update/{id}")
 	public ResponseDto update(@AuthenticationPrincipal PrincipalDetail principal, @PathVariable int id,
 			@RequestBody Board board) {
 
@@ -54,8 +54,8 @@ public class BoardApiController {
 		ServiceResType res = boardService.수정(principal, id, board);
 		if (res == ServiceResType.NotFound)
 			return new ResponseDto(HttpStatus.NOT_FOUND, "not found id");
-		else if (res == ServiceResType.Principal)
-			return new ResponseDto(HttpStatus.UNAUTHORIZED, "principal");
+		else if (res == ServiceResType.PrincipalCheckFail)
+			return new ResponseDto(HttpStatus.UNAUTHORIZED, "no Permission");
 
 		return new ResponseDto(HttpStatus.OK, "");
 	}

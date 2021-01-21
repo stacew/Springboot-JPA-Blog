@@ -3,6 +3,7 @@ package com.doksam.blog.controller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -21,46 +22,48 @@ public class BoardController {
 
 	@Autowired
 	private BoardService boardService;
-	
+
 	// http://localhost:8000
 	@GetMapping({ "", "/" }) //
-	public String index(Model model, @PageableDefault(size=3,sort="id",direction=Sort.Direction.DESC) Pageable pageable) {
-		model.addAttribute("boardPage", boardService.페이지(pageable));		
-			
+	public String index(Model model,
+			@PageableDefault(size = 3, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+		Page<Board> boardPage = boardService.페이지(pageable);
+		if (boardPage.hasContent())
+			model.addAttribute("boardPage", boardPage);
+
 		return "index";
-		//@Controller는 리턴할 때 viewResolver가 작동!
-		//앞, 뒤로 prefix ,suffix를 붙여주고 해당 페이지로 model의 정보를 보냄.
+		// @Controller는 리턴할 때 viewResolver가 작동!
+		// 앞, 뒤로 prefix ,suffix를 붙여주고 해당 페이지로 model의 정보를 보냄.
 	}
-	
+
 	@GetMapping("/board/{id}")
-	public String findBoardById(@PathVariable int id, Model model){
+	public String findBoardById(@PathVariable int id, Model model) {
 		Optional<Board> board = boardService.가져오기(id);
-		if( board.isEmpty() )
-			return "exception/deleted";
-		
+		if (board.isEmpty())
+			return "exception/notFound";
+
 		model.addAttribute("board", board.get());
 		return "board/detail";
 	}
 
 	@GetMapping("/board/updateForm/{id}")
-	public String updateForm(@AuthenticationPrincipal PrincipalDetail principal,
-			@PathVariable int id, Model model) {
-		
+	public String updateForm(@AuthenticationPrincipal PrincipalDetail principal, @PathVariable int id, Model model) {
+
 		Optional<Board> board = boardService.가져오기(id);
-		if( board.isEmpty() )
-			return "exception/deleted";
-		
-		if( principal.getUser().getId() != board.get().getUser().getId() )
-			return "exception/principal";
-		
+		if (board.isEmpty())
+			return "exception/notFound";
+
+		if (principal.getUser().getId() != board.get().getUser().getId())
+			return "exception/noPermission";
+
 		model.addAttribute("board", board.get());
 		return "board/updateForm";
 	}
-	
-	//USER 권한 필요
+
+	// USER 권한 필요
 	@GetMapping("/board/createForm")
 	public String createForm() {
 		return "board/createForm";
 	}
-	
+
 }

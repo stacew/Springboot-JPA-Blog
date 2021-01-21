@@ -3,6 +3,7 @@ package com.doksam.blog.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,14 +18,14 @@ import com.doksam.blog.config.auth.PrincipalDetailService;
 @EnableWebSecurity // 스프링 시큐리티에 활성화된 필터의 설정 변경
 @EnableGlobalMethodSecurity(prePostEnabled = true) // 특정 주소로 접근을 하면 권한 및 인증을 미리 체크
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+	@Autowired
+	private PrincipalDetailService principalDetailService;
+
 	@Bean // IOC가 됨.
 	public BCryptPasswordEncoder encodePWD() {
 		return new BCryptPasswordEncoder();
 	}
-
-	@Autowired
-	private PrincipalDetailService principalDetailService;
-
+	
 	// 시큐리티가 해당 password를 무엇으로 해쉬가 되었는지 encodePWD()
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -48,5 +49,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				//.successHandler(___________)
 				//.failureHandler(________)	//로그인 실패 시 팝업 처리
 				.failureUrl("/auth/loginForm");
+	}
+	
+	@Bean
+	@Override
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		// TODO Auto-generated method stub
+		return super.authenticationManagerBean();
 	}
 }

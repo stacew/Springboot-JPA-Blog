@@ -24,17 +24,19 @@ public class AuthApiController {
 		// @Column(nullable=false) 만으로는 DB에 emptyString 방지가 불가능 하기 때문에 추가
 		if (user.getUsername().isBlank() || user.getUsername().isEmpty())
 			return new ResponseDto(HttpStatus.BAD_REQUEST, "username is empty.");
-		else if (user.getEmail().isBlank() || user.getEmail().isEmpty())
-			return new ResponseDto(HttpStatus.BAD_REQUEST, "email is empty.");
 		else if (user.getPassword().isBlank() || user.getPassword().isEmpty())
 			return new ResponseDto(HttpStatus.BAD_REQUEST, "password is empty.");
-
+		else if (user.getEmail().isBlank() || user.getEmail().isEmpty())
+			return new ResponseDto(HttpStatus.BAD_REQUEST, "email is empty.");		
+		//else if ( username & password & email 규칙 )
+			
+		
 		//service
 		ServiceResType res = userService.회원가입(user);
 		if (res == ServiceResType.Duplicated_Username)
-			return new ResponseDto(HttpStatus.BAD_REQUEST, "해당 username이 존재합니다.");
+			return new ResponseDto(HttpStatus.CONFLICT, "unable username.");
 		else if (res == ServiceResType.Duplicated_Email)
-			return new ResponseDto(HttpStatus.BAD_REQUEST, "해당 email이 존재합니다.");
+			return new ResponseDto(HttpStatus.CONFLICT, "unable email.");
 
 		return new ResponseDto(HttpStatus.OK, ""); // 자바 오브젝트를 JSON으로 변환해서 리턴(Jackson)
 	}

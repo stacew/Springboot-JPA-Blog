@@ -7,11 +7,11 @@
 	<form action="/auth/login" method="post">
 
 		<div class="form-group">
-			<label for="username">User Name</label> <input type="text" name="username" class="form-control" placeholder="Enter User Name" id="username">
+			<label for="username">User Name</label> <input type="text" name="username" class="form-control" placeholder="Enter User Name" id="username" autocomplete="off">
 		</div>
 
 		<div class="form-group">
-			<label for="password">Password</label> <input type="password" name="password" class="form-control" placeholder="Enter Password" id="password">
+			<label for="password">Password</label> <input type="password" name="password" class="form-control" placeholder="Enter Password" id="password" autocomplete="off">
 		</div>
 
 		<div class="form-group">
