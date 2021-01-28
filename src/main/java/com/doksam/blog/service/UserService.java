@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.doksam.blog.config.auth.PrincipalDetail;
+import com.doksam.blog.model.AuthType;
 import com.doksam.blog.model.RoleType;
 import com.doksam.blog.model.User;
 import com.doksam.blog.repository.UserRepository;
@@ -32,18 +33,19 @@ public class UserService {
 	public ServiceResType 회원가입(User user) {
 		// 인터페이스 vs 서비스
 		// 인터페이스에서 transactional 함수를 여러 번으로 호출하면 안 좋을 것 같아 여기서 구현해야 될 것 같다는 생각..
-		// 인터페이스는 서비스로 오는 파라미터의 세팅값 까지만 처리하자.
-
-		if (userRepository.findByUsername(user.getUsername()).isEmpty() == false)
+		// 인터페이스는 서비스로 오는 파라미터의 세팅값 까지만 처리하자.		
+		if (userRepository.findByAuthAndUsername(AuthType.Member, user.getUsername()).isEmpty() == false)
 			return ServiceResType.Duplicated_Username;
-		if (userRepository.findByEmail(user.getEmail()).isEmpty() == false)
+		if (userRepository.findByAuthAndEmail(AuthType.Member, user.getEmail()).isEmpty() == false)
 			return ServiceResType.Duplicated_Email;
 
 		String rawPassword = user.getPassword(); // ui처리는 https로
 		String encPassword = encoder.encode(rawPassword);
 		user.setPassword(encPassword);
+		
 		user.setRole(RoleType.USER);
-
+		user.setAuth(AuthType.Member);	
+		
 		userRepository.save(user);
 		return ServiceResType.Success;
 	}
@@ -66,6 +68,25 @@ public class UserService {
 
 		return ServiceResType.Success;
 		// 서비스(함수) 종료 = 트랜잭션 종료(jpaUser 더티체킹 commit)
+	}
+
+	@Transactional(readOnly = true)
+	public Optional<User> 회원찾기(User user) {
+		return userRepository.findByAuthAndUsername(user.getAuth(), user.getUsername());
+	}
+	
+	@Transactional
+	public ServiceResType OAuth회원가입(User user) {
+		
+		String rawPassword = user.getPassword();
+		String encPassword = encoder.encode(rawPassword);
+		
+		user.setPassword(encPassword);		
+		user.setRole(RoleType.USER);
+		
+		userRepository.save(user);
+		return ServiceResType.Success;	
+		
 	}
 }
 

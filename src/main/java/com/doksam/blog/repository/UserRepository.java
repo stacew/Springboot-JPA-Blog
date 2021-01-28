@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.doksam.blog.model.AuthType;
 import com.doksam.blog.model.User;
 
 //DAO Data Access Object
@@ -14,6 +15,9 @@ public interface UserRepository extends JpaRepository<User, Integer> { // User �
 	// SELECT * FROM user WHERE username = 1?;
 	Optional<User> findByUsername(String username);
 	Optional<User> findByEmail(String email);
+	
+	Optional<User> findByAuthAndUsername(AuthType auth, String  username);
+	Optional<User> findByAuthAndEmail(AuthType auth, String email);
 }
 
 ////1.  JPA Naming 전략 : 함수 이름에 따라 쿼리가 만들어짐.

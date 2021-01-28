@@ -1,12 +1,31 @@
-server:
+doksam:
+  db:
+    url: jdbc:mysql://localhost:3306/blog?serverTimezone=Asia/Seoul
+    username: owen
+    password: 880426
+    
   port: 8000
+  domain: "http://localhost:${doksam.port}"
+
+  secretUUID: ${DOKSAM_SECRET_UUID} # STS 재시작해야 환경변수 적용, 값 인식 못하는 경우에 빌드 성공하려면 ex) ${DOKSAM_SECRET_UUID:fail}
+  auth:
+    kakaoRest:     
+      clientKey: "eb220ea7845f5ed58f568f0fa8279637"
+      rediLogin: "${doksam.domain}/auth/kakaoLoginCallback"
+      rediLogout: "${doksam.domain}/auth/api/kakaoLogoutCallback"
+      reqLogin: "https://kauth.kakao.com/oauth/authorize?client_id=${doksam.auth.kakaoRest.clientKey}&redirect_uri=${doksam.auth.kakaoRest.rediLogin}&response_type=code"
+      reqToken: "https://kauth.kakao.com/oauth/token"
+      reqInfo: "https://kapi.kakao.com/v2/user/me"
+---
+server:
+  port: ${doksam.port}
   servlet:
     context-path: /
     encoding:
       charset: UTF-8
       enabled: true
       force: true
-    
+---
 spring:
   mvc:
     view: 
@@ -15,9 +34,9 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/blog?serverTimezone=Asia/Seoul
-    username: owen
-    password: 880426
+    url: ${doksam.db.url}
+    username: ${doksam.db.username}
+    password: ${doksam.db.password}
     
   jpa:
     open-in-view: true # lazy loading이 가능함. Controller에서 proxy 객체에 접근할 때, 새로 JDBC 연결 후 새로 Data를 가져옴. But, 해당 지역에서 변경 하면 안 됨. 더티 체킹 처리 불가능.

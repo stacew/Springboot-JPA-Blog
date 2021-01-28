@@ -45,10 +45,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.formLogin()
 				.loginPage("/auth/loginForm") // redirect...
 				.loginProcessingUrl("/auth/login") // 스프링 시큐리티가 해당 주소로 오는 요청을 가로채서 대신해준다.
-				.defaultSuccessUrl("/")
+				.defaultSuccessUrl("/");
 				//.successHandler(___________)
 				//.failureHandler(________)	//로그인 실패 시 팝업 처리
-				.failureUrl("/auth/loginForm");
+				//.failureUrl("/auth/loginForm");
 	}
 	
 	@Bean
