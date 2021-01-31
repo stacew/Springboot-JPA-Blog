@@ -13,9 +13,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,10 +49,13 @@ public class Board {
 	@ManyToOne(fetch=FetchType.EAGER) // This = Many, Target = One
 	@JoinColumn(name="userId")
 	private User user; //자바는 오브젝트를 저장할 수 있다
+
 	
 	@OneToMany(mappedBy = "board", fetch=FetchType.EAGER) //mappedBy가 있으면 연관관계의 주인이 아니다. => FK가 아니다. => DB에 컬럼을 만들지 마세요.
 	//@JoIncolumn(name="replyId") 필요 없음. 테이블을 만들게 되면 1정규화가 깨지기 때문에, join할 때 값만 넣어야 함.
-	private List<Reply> reply;
+	@JsonIgnoreProperties({"board"}) //jackson json 처리 시, board에서 replys를 호출할 때, board의 getter 무시된다.
+	@OrderBy("id desc")
+	private List<Reply> replys;
 	
 	@CreationTimestamp
 	private Timestamp createDate;

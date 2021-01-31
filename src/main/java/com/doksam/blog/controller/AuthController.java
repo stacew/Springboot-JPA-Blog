@@ -68,8 +68,6 @@ public class AuthController {
 	public String kakaoLoginCallback(String code) { //Response "code"
 
 		////// 2. 토큰 받기. Post
-		System.out.println(2);
-		
 		// Post 방식으로 Key=value 데이터를 카카오로 요청해야 됨.
 		// HttpsURLConnection, Retrofit2, RestTemplate 라이브러리 등이 있음.
 		RestTemplate rt = new RestTemplate();
@@ -104,8 +102,6 @@ public class AuthController {
 		}
 		
 		////// 3. 사용자 정보 가져오기. Post ( Get ), Access Token( Admin Key )
-		System.out.println(3);
-		
 		RestTemplate rt2 = new RestTemplate();
 
 		// HttpHeader 오브젝트
@@ -132,26 +128,18 @@ public class AuthController {
 
 		
 		////// 4. 로그인( + 비가입 자 회원 가입 )
-		System.out.println(4);
-		
 		User user = User.builder().auth(AuthType.Kakao).username(kakaoProfile.getId().toString())
 				.email(kakaoProfile.getKakao_account().getEmail()).password(doksamSecretUUID).build();
-		System.out.println(user.getPassword());
-		System.out.println(doksamSecretUUID);
+	
 		Optional<User> opUser = userService.회원찾기(user);
 		if( opUser.isEmpty() ) {
-			System.out.println("회원가입 시작");
 			userService.OAuth회원가입(user);
-			System.out.println("회원가입 끝");
 		}
-		System.out.println(user.getPassword());
-		System.out.println(doksamSecretUUID);
-		System.out.println("auth매니저 1");
+		
+		//회원가입 루틴 진행하면 user.getPassword() 변경되니 doksamSecretUUID 사용.
 		Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), doksamSecretUUID));
-		System.out.println("auth매니저 2");
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		System.out.println("auth매니저 3");
 		
 		return "redirect:/";
 	}

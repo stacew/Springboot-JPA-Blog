@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.doksam.blog.config.auth.PrincipalDetail;
 import com.doksam.blog.dto.ResponseDto;
 import com.doksam.blog.model.Board;
+import com.doksam.blog.model.Reply;
 import com.doksam.blog.service.BoardService;
 import com.doksam.blog.service.ServiceResType;
 
@@ -57,6 +58,19 @@ public class BoardApiController {
 		else if (res == ServiceResType.PrincipalCheckFail)
 			return new ResponseDto(HttpStatus.UNAUTHORIZED, "no Permission");
 
+		return new ResponseDto(HttpStatus.OK, "");
+	}
+	
+	@PostMapping("/api/board/{boardId}/reply/create")
+	public ResponseDto replyCreate(@AuthenticationPrincipal PrincipalDetail principal,
+			@PathVariable int boardId,
+			@RequestBody Reply reply) {
+		
+		//service
+		ServiceResType res = boardService.댓글쓰기(principal, boardId, reply);
+		if (res == ServiceResType.NotFound)
+			return new ResponseDto(HttpStatus.NOT_FOUND, "not found id");
+		
 		return new ResponseDto(HttpStatus.OK, "");
 	}
 
