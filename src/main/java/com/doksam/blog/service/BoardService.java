@@ -10,10 +10,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.doksam.blog.config.auth.PrincipalDetail;
+import com.doksam.blog.dto.ReplyCreateRequestDto;
 import com.doksam.blog.model.Board;
 import com.doksam.blog.model.Reply;
+import com.doksam.blog.model.User;
 import com.doksam.blog.repository.BoardRepository;
 import com.doksam.blog.repository.ReplyRepository;
+import com.doksam.blog.repository.UserRepository;
 
 @Service
 public class BoardService {
@@ -22,6 +25,8 @@ public class BoardService {
 	private BoardRepository boardRepository;
 	@Autowired
 	private ReplyRepository replyRepository;
+	@Autowired
+	private UserRepository userRepository;
 
 	@Transactional
 	public ServiceResType 생성(PrincipalDetail principal, Board board) { // title, content
@@ -76,15 +81,52 @@ public class BoardService {
 		// 그래도 update 해주는게 낫지 않나...?
 	}
 
+//	@Transactional
+//	public ServiceResType 댓글쓰기(PrincipalDetail principal, int boardId, Reply reply) {
+//		Optional<Board> opBoard = boardRepository.findById(boardId);
+//		if (opBoard.isEmpty())
+//			return ServiceResType.NotFound;
+//		
+//		reply.setBoard(opBoard.get());
+//		reply.setUser(principal.getUser());	
+//		replyRepository.save(reply);		
+//		return ServiceResType.Success;
+//	}
+	//RequestDTO(Data Transfer Object) 이용
+//	@Transactional
+//	public ServiceResType 댓글쓰기(PrincipalDetail principal, ReplyCreateRequestDto replyCreateRequestDto) {
+//		Optional<Board> opBoard = boardRepository.findById(replyCreateRequestDto.getBoardId());
+//		if (opBoard.isEmpty())
+//			return ServiceResType.NotFound;
+//
+//		Optional<User> opUser = userRepository.findById(principal.getUser().getId());
+//		if (opUser.isEmpty())
+//			return ServiceResType.NotFound;
+//		Reply reply = Reply.builder().user(opUser.get()).board(opBoard.get())
+//				.content(replyCreateRequestDto.getContent()).build();
+//
+//		replyRepository.save(reply);
+//		return ServiceResType.Success;
+//	}
+	//NativeQuery 이용
 	@Transactional
-	public ServiceResType 댓글쓰기(PrincipalDetail principal, int boardId, Reply reply) {
-		Optional<Board> opBoard = boardRepository.findById(boardId);
-		if (opBoard.isEmpty())
+	public ServiceResType 댓글쓰기(PrincipalDetail principal, ReplyCreateRequestDto replyCreateRequestDto) {
+		replyRepository.nativeCreate(principal.getUser().getId(), replyCreateRequestDto.getBoardId(), replyCreateRequestDto.getContent());
+		return ServiceResType.Success;
+	}
+	
+	@Transactional
+	public ServiceResType 댓글삭제(PrincipalDetail principal, int replyId) {
+	
+		Optional<Reply> opReply = replyRepository.findById(replyId);
+		if( opReply.isEmpty() )
 			return ServiceResType.NotFound;
 		
-		reply.setBoard(opBoard.get());
-		reply.setUser(principal.getUser());	
-		replyRepository.save(reply);		
+		Reply reply = opReply.get();
+		if (principal.getUser().getId() != reply.getUser().getId())
+			return ServiceResType.PrincipalCheckFail;
+		
+		replyRepository.deleteById(replyId);
 		return ServiceResType.Success;
 	}
 }

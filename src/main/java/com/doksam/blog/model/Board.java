@@ -3,6 +3,7 @@ package com.doksam.blog.model;
 import java.sql.Timestamp;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -51,7 +52,9 @@ public class Board {
 	private User user; //자바는 오브젝트를 저장할 수 있다
 
 	
-	@OneToMany(mappedBy = "board", fetch=FetchType.EAGER) //mappedBy가 있으면 연관관계의 주인이 아니다. => FK가 아니다. => DB에 컬럼을 만들지 마세요.
+	@OneToMany(mappedBy = "board", fetch=FetchType.EAGER, cascade=CascadeType.REMOVE)
+	//mappedBy가 있으면 연관관계의 주인이 아니다. => FK가 아니다. => DB에 컬럼을 만들지 마세요.
+	//cascade REMOVE 보드가 삭제될 때, replys를 전부 삭제
 	//@JoIncolumn(name="replyId") 필요 없음. 테이블을 만들게 되면 1정규화가 깨지기 때문에, join할 때 값만 넣어야 함.
 	@JsonIgnoreProperties({"board"}) //jackson json 처리 시, board에서 replys를 호출할 때, board의 getter 무시된다.
 	@OrderBy("id desc")
