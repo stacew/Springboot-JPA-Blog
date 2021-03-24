@@ -139,6 +139,7 @@ public class AuthController {
 		//회원가입 루틴 진행하면 user.getPassword() 변경되니 doksamSecretUUID 사용.
 		Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), doksamSecretUUID));
+		
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		
 		return "redirect:/";

@@ -1,6 +1,6 @@
 doksam:
   db:
-    url: jdbc:mysql://localhost:3306/blog?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3306/SpringbootBlogEx?serverTimezone=Asia/Seoul
     username: owen
     password: 880426
     
